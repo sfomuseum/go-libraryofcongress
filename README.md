@@ -17,6 +17,22 @@ go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 
 `parse-lcname is a command-line tool to parse the Library of Congress `lcname.both.ndjson` (or `lcname.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.
 
+For example:
+
+```
+> ./bin/parse-lcnaf ~/Downloads/lcnaf.both.ndjson.zip > lcnaf.csv
+
+Time passes...
+More time passes...
+Time keeps on ticking ticking in to the future...
+```
+
+#### Notes
+
+* Subject headings with empty labels are ignored.
+* It is assumed that you have downloaded and uncompressed the [lcsh.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
+* This tool will work with the compressed and uncompressed version of `lcnaf.both.ndjson`. Keep in mind that compressed file is already 7GB and expands to an uncompressed 55GB.
+
 ### parse-lcsh
 
 `parse-lcsh` is a command-line tool to parse the Library of Congress Subject Headings (`lcsh.both.ndjson`) file and output CSV-encoded subject heading ID and (English) label data.
@@ -49,10 +65,11 @@ sh2005006899,Valdivian culture
 ... and so on
 ```
 
-### Notes
+#### Notes
 
 * Subject headings with empty labels are ignored.
 * It is assumed that you have downloaded and uncompressed the [lcsh.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
+* This tool will work with the compressed and uncompressed version of `lcsh.both.ndjson`.
 
 ## See also
 
