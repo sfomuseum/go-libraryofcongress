@@ -13,6 +13,10 @@ $> make cli
 go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 ```
 
+### parse-lcnaf
+
+`parse-lcname is a command-line tool to parse the Library of Congress `lcname.both.ndjson` (or `lcname.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.
+
 ### parse-lcsh
 
 `parse-lcsh` is a command-line tool to parse the Library of Congress Subject Headings (`lcsh.both.ndjson`) file and output CSV-encoded subject heading ID and (English) label data.

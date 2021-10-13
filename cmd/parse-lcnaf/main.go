@@ -1,8 +1,8 @@
-// parse-lcsh is a command-line tool to parse the Library of Congress `lcsh.both.ndjson` file and out CSV-encoded
-// subject heading ID and (English) label data.
+// parse-lcname is a command-line tool to parse the Library of Congress `lcname.both.ndjson` (or `lcname.both.ndjson.zip`)
+// file and output CSV-encoded subject heading ID and (English) label data.
 package main
 
-// Please reconcile this code with cmd/parse-lcnaf. Most of it is identical.
+// Please reconcile this code with cmd/parse-lcsh. Most of it is identical.
 
 import (
 	"archive/zip"
@@ -63,7 +63,6 @@ func main() {
 		default:
 			err = walkFile(ctx, uri, csv_wr)
 		}
-
 	}
 
 }
@@ -191,13 +190,13 @@ func parseRecord(ctx context.Context, csv_wr *csvdict.Writer, body []byte) error
 		id_rsp := item.Get("@id")
 		id := id_rsp.String()
 
-		if !strings.HasPrefix(id, "http://id.loc.gov/authorities/subjects/") {
+		if !strings.HasPrefix(id, "http://id.loc.gov/authorities/names/") {
 			continue
 		}
 
 		sh_id := filepath.Base(id)
 
-		label_rsp := item.Get("madsrdf:authoritativeLabel.@value")
+		label_rsp := item.Get("madsrdf:authoritativeLabel")
 		label := label_rsp.String()
 
 		if label == "" {
