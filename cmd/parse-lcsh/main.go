@@ -16,7 +16,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 )
+
+// This is used to prevent duplicate entries
+var seen *sync.Map
+
+func init() {
+	seen = new(sync.Map)
+}
 
 func main() {
 
@@ -151,6 +159,12 @@ func parseRecord(ctx context.Context, csv_wr *csvdict.Writer, body []byte) error
 		label := label_rsp.String()
 
 		if label == "" {
+			continue
+		}
+
+		_, loaded := seen.LoadOrStore(sh_id, true)
+
+		if loaded {
 			continue
 		}
 
