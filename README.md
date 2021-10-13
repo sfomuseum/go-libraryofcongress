@@ -45,7 +45,10 @@ sh2005006899,Valdivian culture
 ... and so on
 ```
 
-_Note: Subject headings with empty labels are ignored._
+### Notes
+
+* Subject headings with empty labels are ignored.
+* It is assumed that you have downloaded and uncompressed the [lcsh.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
 
 ## See also
 
