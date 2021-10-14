@@ -24,7 +24,7 @@ func main() {
 	uris := flag.Args()
 	ctx := context.Background()
 
-	w, err := walk.NewNDJSONWalker(ctx, "ndjson://")
+	w, err := walk.NewWalker(ctx, "ndjson://")
 
 	if err != nil {
 		log.Fatalf("Failed to create walker, %v", err)
@@ -50,7 +50,7 @@ func main() {
 	csv_wr.WriteHeader()
 
 	seen := new(sync.Map)
-	
+
 	cb_func := walkCallbackFunc(csv_wr, seen)
 
 	err = w.WalkURIs(ctx, cb_func, uris...)

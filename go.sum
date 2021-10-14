@@ -99,6 +99,8 @@ github.com/aaronland/go-json-query v0.1.1 h1:2kwlEvJrH8Vr9gOMtfiVhBAqDtq3z7S0P2z
 github.com/aaronland/go-json-query v0.1.1/go.mod h1:lZHt3LmcrZ0bovlqvr1jQaQKJKpb2pMLN2er6RGHAIQ=
 github.com/aaronland/go-jsonl v0.0.9 h1:q/2L8eGYLSxCsUTK0SiUrVOVIKKdYD9LfA41XCUugvM=
 github.com/aaronland/go-jsonl v0.0.9/go.mod h1:I4Gl7tWJ34nR47ffqLzPidXFAXKtKVLGuUA7KRg664M=
+github.com/aaronland/go-roster v0.0.2 h1:2Fu7v4VQLRLRL/Zgr6R9S5JxsW75Ab/K88QtMVX532s=
+github.com/aaronland/go-roster v0.0.2/go.mod h1:AcovpxlG1XxJxX2Fjqlm63fEIBhCjEIBV4lP87FZDmI=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/aws/aws-sdk-go v1.15.27/go.mod h1:mFuSZ37Z9YOHbQEwBWztmVzqXrEkub65tZoCYDt7FT0=
 github.com/aws/aws-sdk-go v1.37.0/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=

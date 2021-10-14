@@ -10,12 +10,25 @@ import (
 	"path/filepath"
 )
 
+// type NDJSONWalker implements the `Walker` interface for NDJSON files.
 type NDJSONWalker struct {
 	Walker
+	workers int
 }
 
+func init() {
+	ctx := context.Background()
+	RegisterWalker(ctx, "ndjson", NewNDJSONWalker)
+}
+
+// NewNDJSONWalker creates a new instance that implements the `Walker` interface for NDJSON files.
 func NewNDJSONWalker(ctx context.Context, uri string) (Walker, error) {
-	w := &NDJSONWalker{}
+
+	// To do: read workers from uri query parameter
+
+	w := &NDJSONWalker{
+		workers: 100,
+	}
 	return w, nil
 }
 
@@ -145,7 +158,7 @@ func (w *NDJSONWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, 
 	walk_opts := &jsonl_walk.WalkOptions{
 		RecordChannel: record_ch,
 		ErrorChannel:  error_ch,
-		Workers:       100,
+		Workers:       w.workers,
 	}
 
 	jsonl_walk.WalkReader(ctx, walk_opts, r)

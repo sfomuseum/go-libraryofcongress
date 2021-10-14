@@ -3,6 +3,9 @@ github.com/aaronland/go-json-query
 # github.com/aaronland/go-jsonl v0.0.9
 ## explicit
 github.com/aaronland/go-jsonl/walk
+# github.com/aaronland/go-roster v0.0.2
+## explicit
+github.com/aaronland/go-roster
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 github.com/golang/groupcache/lru
 # github.com/golang/protobuf v1.5.2
