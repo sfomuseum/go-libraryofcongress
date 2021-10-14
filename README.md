@@ -20,11 +20,28 @@ go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 For example:
 
 ```
-> ./bin/parse-lcnaf ~/Downloads/lcnaf.both.ndjson.zip > lcnaf.csv
+$> ./bin/parse-lcnaf ~/Downloads/lcnaf.both.ndjson.zip > lcnaf.csv
 
 Time passes...
 More time passes...
 Time keeps on ticking ticking in to the future...
+
+$> wc -l lcnaf.csv
+ 11024368 lcnaf.csv
+
+$> cat lcnaf.csv
+id,label
+n90699999,"Birkan, Kaarin"
+n85299999,"Devorin, Lonyah"
+no2007099999,"Graham, Sean"
+n94099999,Tampa Joe
+n98099999,"McGoggan, Graham"
+n79099999,"Brockmann, Lester C."
+no2018099999,"Neefe, Christian Gottlob, 1748-1798. Veränderungen über den Priestermarsch aus Mozarts Zauberflöte"
+n2003099999,"Halstenberg, Friedrich"
+no2019099999,"Colling, Anton"
+n88299999,"Herring, Jackson R."
+... and so on
 ```
 
 #### Notes
@@ -32,6 +49,7 @@ Time keeps on ticking ticking in to the future...
 * Subject headings with empty labels are ignored.
 * It is assumed that you have downloaded and uncompressed the [lcsh.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
 * This tool will work with the compressed and uncompressed version of `lcnaf.both.ndjson`. Keep in mind that compressed file is already 7GB and expands to an uncompressed 55GB.
+* This tool creates a temporary SQLite database (in the operating system's "temp" directory to track duplicate records. This is necessary because tracking duplicate IDs in memory tend to cause out-of-memory errors. The temporary SQLite database is removed when the tool exits.
 
 ### parse-lcsh
 
