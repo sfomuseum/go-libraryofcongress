@@ -15,6 +15,9 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/googleapis/gax-go/v2
 github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
+# github.com/mattn/go-sqlite3 v1.14.8
+## explicit
+github.com/mattn/go-sqlite3
 # github.com/sfomuseum/go-csvdict v0.0.1
 ## explicit
 github.com/sfomuseum/go-csvdict

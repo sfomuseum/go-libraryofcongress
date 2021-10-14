@@ -11,21 +11,18 @@ import (
 	"fmt"
 	"github.com/aaronland/go-jsonl/walk"
 	"github.com/sfomuseum/go-csvdict"
+	"github.com/sfomuseum/go-libraryofcongress"
 	"github.com/tidwall/gjson"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 )
 
 // This is used to prevent duplicate entries
-var seen *sync.Map
 
-func init() {
-	seen = new(sync.Map)
-}
+var catalog *libraryofcongress.Catalog
 
 func main() {
 
@@ -33,6 +30,15 @@ func main() {
 
 	uris := flag.Args()
 	ctx := context.Background()
+
+	c, err := libraryofcongress.NewCatalog(ctx, "tmp://")
+
+	if err != nil {
+		log.Fatalf("Failed to create catalog, %v", err)
+	}
+
+	catalog = c
+	defer catalog.Close(ctx)
 
 	writers := []io.Writer{
 		os.Stdout,
@@ -203,9 +209,13 @@ func parseRecord(ctx context.Context, csv_wr *csvdict.Writer, body []byte) error
 			continue
 		}
 
-		_, loaded := seen.LoadOrStore(sh_id, true)
+		exists, err := catalog.ExistsOrStore(ctx, sh_id)
 
-		if loaded {
+		if err != nil {
+			return fmt.Errorf("Failed to determine whether %s exists, %w", sh_id, err)
+		}
+
+		if exists {
 			continue
 		}
 
@@ -214,7 +224,7 @@ func parseRecord(ctx context.Context, csv_wr *csvdict.Writer, body []byte) error
 			"label": label,
 		}
 
-		err := csv_wr.WriteRow(out)
+		err = csv_wr.WriteRow(out)
 
 		if err != nil {
 			return fmt.Errorf("Failed to write %s (%s), %v", id, label, err)
