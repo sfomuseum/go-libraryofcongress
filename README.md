@@ -48,7 +48,7 @@ n88299999,"Herring, Jackson R."
 #### Notes
 
 * Person with empty labels are ignored.
-* It is assumed that you have downloaded and uncompressed the [lcnaf.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
+* It is assumed that you have downloaded the [lcnaf.both.ndjson.zip](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
 * This tool will work with the compressed and uncompressed version of `lcnaf.both.ndjson`. Keep in mind that compressed file is already 7GB and expands to an uncompressed 55GB.
 * This tool creates a temporary SQLite database (in the operating system's "temp" directory to track duplicate records. This is necessary because tracking duplicate IDs in memory tend to cause out-of-memory errors. The temporary SQLite database is removed when the tool exits.
 
@@ -87,7 +87,7 @@ sh2005006899,Valdivian culture
 #### Notes
 
 * Subject headings with empty labels are ignored.
-* It is assumed that you have downloaded and uncompressed the [lcsh.both.ndjson](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
+* It is assumed that you have downloaded the [lcsh.both.ndjson.zip](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
 * This tool will work with the compressed and uncompressed version of `lcsh.both.ndjson`.
 
 ## See also
