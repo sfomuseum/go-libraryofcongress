@@ -1,4 +1,4 @@
-// parse-lcname is a command-line tool to parse the Library of Congress `lcname.both.ndjson` (or `lcname.both.ndjson.zip`)
+// parse-lcnaf is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`)
 // file and output CSV-encoded subject heading ID and (English) label data.
 package main
 
