@@ -15,7 +15,7 @@ go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 
 ### parse-lcnaf
 
-`parse-lcnaf is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.
+`parse-lcnaf` is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) Name Authority file and output CSV-encoded subject heading ID and (English) label data.
 
 For example:
 
@@ -53,7 +53,7 @@ n88299999,"Herring, Jackson R."
 
 ### parse-lcsh
 
-`parse-lcsh` is a command-line tool to parse the Library of Congress Subject Headings (`lcsh.both.ndjson`) file and output CSV-encoded subject heading ID and (English) label data.
+`parse-lcsh` is a command-line tool to parse the Library of Congress Subject Headings (`lcsh.both.ndjson`) Subject Headings file and output CSV-encoded subject heading ID and (English) label data.
 
 For example:
 
