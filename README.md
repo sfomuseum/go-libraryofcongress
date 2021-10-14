@@ -10,12 +10,13 @@ Go package providing tools for working with Library of Congress data.
 
 ```
 $> make cli
+go build -mod vendor -o bin/parse-lcnaf cmd/parse-lcnaf/main.go
 go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 ```
 
 ### parse-lcnaf
 
-`parse-lcnaf` is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) Name Authority file and output CSV-encoded subject heading ID and (English) label data.
+`parse-lcnaf` is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) Name Authority file and output CSV-encoded name authority ID and (English) label data.
 
 For example:
 
