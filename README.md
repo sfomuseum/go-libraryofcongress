@@ -6,6 +6,8 @@ Go package providing tools for working with Library of Congress data.
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/sfomuseum/go-libraryofcongress.svg)](https://pkg.go.dev/github.com/sfomuseum/go-libraryofcongress)
 
+(Go) Documentation may be incomplete at this time.
+
 ## Tools
 
 ```
