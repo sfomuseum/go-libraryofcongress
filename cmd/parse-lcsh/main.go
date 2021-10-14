@@ -2,8 +2,6 @@
 // subject heading ID and (English) label data.
 package main
 
-// Please reconcile this code with cmd/parse-lcnaf. Most of it is identical.
-
 import (
 	"context"
 	"flag"
@@ -18,13 +16,6 @@ import (
 	"strings"
 	"sync"
 )
-
-// This is used to prevent duplicate entries
-var seen *sync.Map
-
-func init() {
-	seen = new(sync.Map)
-}
 
 func main() {
 
@@ -58,7 +49,9 @@ func main() {
 
 	csv_wr.WriteHeader()
 
-	cb_func := CallbackFunc(csv_wr)
+	seen := new(sync.Map)
+	
+	cb_func := walkCallbackFunc(csv_wr, seen)
 
 	err = w.WalkURIs(ctx, cb_func, uris...)
 
@@ -67,7 +60,7 @@ func main() {
 	}
 }
 
-func CallbackFunc(csv_wr *csvdict.Writer) walk.WalkCallbackFunction {
+func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map) walk.WalkCallbackFunction {
 
 	fn := func(ctx context.Context, body []byte) error {
 
