@@ -19,6 +19,8 @@ import (
 
 func main() {
 
+	broader := flag.Bool("include-broader", false, "Include a comma-separated list of `skos:broader` pointers associated with each subject heading")
+
 	flag.Parse()
 
 	uris := flag.Args()
@@ -41,6 +43,10 @@ func main() {
 		"label",
 	}
 
+	if *broader {
+		fieldnames = append(fieldnames, "broader")
+	}
+
 	csv_wr, err := csvdict.NewWriter(mw, fieldnames)
 
 	if err != nil {
@@ -51,7 +57,7 @@ func main() {
 
 	seen := new(sync.Map)
 
-	cb_func := walkCallbackFunc(csv_wr, seen)
+	cb_func := walkCallbackFunc(csv_wr, seen, fieldnames)
 
 	err = w.WalkURIs(ctx, cb_func, uris...)
 
@@ -60,7 +66,13 @@ func main() {
 	}
 }
 
-func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map) walk.WalkCallbackFunction {
+func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map, fieldnames []string) walk.WalkCallbackFunction {
+
+	capture := make(map[string]bool)
+
+	for _, k := range fieldnames {
+		capture[k] = true
+	}
 
 	fn := func(ctx context.Context, body []byte) error {
 
@@ -88,15 +100,43 @@ func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map) walk.WalkCallbackF
 				continue
 			}
 
+			out := map[string]string{
+				"id":    sh_id,
+				"label": label,
+			}
+
+			_, ok := capture["broader"]
+
+			if ok {
+
+				out["broader"] = ""
+
+				broader_rsp := item.Get("skos:broader")
+
+				if broader_rsp.Exists() {
+
+					others := make([]string, 0)
+
+					for _, b := range broader_rsp.Array() {
+
+						other := b.Get("@id").String()
+
+						if !strings.HasPrefix(other, "http://id.loc.gov/authorities/subjects/") {
+							continue
+						}
+
+						sh_other := filepath.Base(other)
+						others = append(others, sh_other)
+					}
+
+					out["broader"] = strings.Join(others, ",")
+				}
+			}
+
 			_, loaded := seen.LoadOrStore(sh_id, true)
 
 			if loaded {
 				continue
-			}
-
-			out := map[string]string{
-				"id":    sh_id,
-				"label": label,
 			}
 
 			err := csv_wr.WriteRow(out)
