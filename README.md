@@ -20,6 +20,14 @@ go build -mod vendor -o bin/parse-lcsh cmd/parse-lcsh/main.go
 
 `parse-lcnaf` is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) Name Authority file and output CSV-encoded name authority ID and (English) label data.
 
+```
+$> ./bin/parse-lcnaf -h
+parse-lcnaf is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.
+
+Usage:
+	 ./bin/parse-lcnaf lcnaf.both.ndjson.zip
+```
+
 For example:
 
 ```
@@ -58,6 +66,26 @@ n88299999,"Herring, Jackson R."
 
 `parse-lcsh` is a command-line tool to parse the Library of Congress Subject Headings (`lcsh.both.ndjson`) Subject Headings file and output CSV-encoded subject heading ID and (English) label data.
 
+```
+$> ./bin/parse-lcsh -h
+parse-lcsh is a command-line tool to parse the Library of Congress `lcsh.both.ndjson` file and out CSV-encoded subject heading ID and (English) label data. It can also be configured to include broader concepts for each heading as well as Wikidata and Worldcat concordances.
+
+Usage:
+	 ./bin/parse-lcsh [options] lcsh.both.ndjson
+
+Valid options are:
+  -include-all
+    	If true will enable all the other -include-* flags
+  -include-broader skos:broader
+    	If present, include a comma-separated list of skos:broader pointers associated with each subject heading
+  -include-concordances
+    	If true will enable the -include-wikidata and -include-worldcat flags
+  -include-wikidata
+    	If present, include a Wikidata pointer associated with each subject heading
+  -include-worldcat
+    	If present, include a Worldcat pointer associated with each subject heading
+```
+
 For example:
 
 ```
@@ -84,6 +112,14 @@ sh85065604,Indians of South America--Ecuador--Antiquities
 sh85040894,Ecuador--Antiquities
 sh2005006899,Valdivian culture
 ... and so on
+```
+
+Or, to include additional metadata (broader concepts and concordances):
+
+```
+$> bin/parse-lcsh -include-all /usr/local/data/loc/lcsh.both.ndjson > lcsh.csv
+$> grep Q3362749 ./lcsh.csv
+sh85097529,Papabuco language,"sh85149668,sh85084601",Q3362749,1052283
 ```
 
 #### Notes

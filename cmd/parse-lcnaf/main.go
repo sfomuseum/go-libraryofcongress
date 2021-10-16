@@ -19,6 +19,12 @@ import (
 
 func main() {
 
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "parse-lcnaf is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.\n\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s lcnaf.both.ndjson.zip\n\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 
 	uris := flag.Args()

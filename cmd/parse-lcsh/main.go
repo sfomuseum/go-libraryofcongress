@@ -1,5 +1,6 @@
 // parse-lcsh is a command-line tool to parse the Library of Congress `lcsh.both.ndjson` file and out CSV-encoded
-// subject heading ID and (English) label data.
+// subject heading ID and (English) label data. It can also be configured to include broader concepts for each heading
+// as well as Wikidata and Worldcat concordances.
 package main
 
 import (
@@ -19,9 +20,35 @@ import (
 
 func main() {
 
-	broader := flag.Bool("include-broader", false, "Include a comma-separated list of `skos:broader` pointers associated with each subject heading")
+	broader := flag.Bool("include-broader", false, "If present, include a comma-separated list of `skos:broader` pointers associated with each subject heading")
+
+	wikidata := flag.Bool("include-wikidata", false, "If present, include a Wikidata pointer associated with each subject heading")
+
+	worldcat := flag.Bool("include-worldcat", false, "If present, include a Worldcat pointer associated with each subject heading")
+
+	concordances := flag.Bool("include-concordances", false, "If true will enable the -include-wikidata and -include-worldcat flags")
+
+	all := flag.Bool("include-all", false, "If true will enable all the other -include-* flags")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "parse-lcsh is a command-line tool to parse the Library of Congress `lcsh.both.ndjson` file and out CSV-encoded subject heading ID and (English) label data. It can also be configured to include broader concepts for each heading as well as Wikidata and Worldcat concordances.\n\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s [options] lcsh.both.ndjson\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Valid options are:\n")
+		flag.PrintDefaults()
+	}
 
 	flag.Parse()
+
+	if *concordances {
+		*wikidata = true
+		*worldcat = true
+	}
+
+	if *all {
+		*broader = true
+		*wikidata = true
+		*worldcat = true
+	}
 
 	uris := flag.Args()
 	ctx := context.Background()
@@ -45,6 +72,14 @@ func main() {
 
 	if *broader {
 		fieldnames = append(fieldnames, "broader")
+	}
+
+	if *wikidata {
+		fieldnames = append(fieldnames, "wikidata_id")
+	}
+
+	if *worldcat {
+		fieldnames = append(fieldnames, "worldcat_id")
 	}
 
 	csv_wr, err := csvdict.NewWriter(mw, fieldnames)
@@ -100,14 +135,56 @@ func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map, fieldnames []strin
 				continue
 			}
 
+			_, loaded := seen.LoadOrStore(sh_id, true)
+
+			if loaded {
+				continue
+			}
+
 			out := map[string]string{
 				"id":    sh_id,
 				"label": label,
 			}
 
-			_, ok := capture["broader"]
+			_, capture_broader := capture["broader"]
+			_, capture_wikidata := capture["wikidata_id"]
+			_, capture_worldcat := capture["worldcat_id"]
 
-			if ok {
+			capture_concordances := false
+
+			if capture_wikidata {
+				capture_concordances = true
+				out["wikidata_id"] = ""
+			}
+
+			if capture_worldcat {
+				capture_concordances = true
+				out["worldcat_id"] = ""
+			}
+
+			if capture_concordances {
+
+				external_rsp := item.Get("madsrdf:hasCloseExternalAuthority")
+
+				if external_rsp.Exists() {
+
+					for _, e := range external_rsp.Array() {
+
+						id := e.Get("@id").String()
+
+						if strings.HasPrefix(id, "http://www.wikidata.org/entity/") && capture_wikidata {
+							out["wikidata_id"] = filepath.Base(id)
+						}
+
+						if strings.HasPrefix(id, "http://id.worldcat.org/fast/") && capture_worldcat {
+							out["worldcat_id"] = filepath.Base(id)
+						}
+					}
+				}
+
+			}
+
+			if capture_broader {
 
 				out["broader"] = ""
 
@@ -131,12 +208,6 @@ func walkCallbackFunc(csv_wr *csvdict.Writer, seen *sync.Map, fieldnames []strin
 
 					out["broader"] = strings.Join(others, ",")
 				}
-			}
-
-			_, loaded := seen.LoadOrStore(sh_id, true)
-
-			if loaded {
-				continue
 			}
 
 			err := csv_wr.WriteRow(out)
