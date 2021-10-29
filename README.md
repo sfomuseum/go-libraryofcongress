@@ -133,3 +133,4 @@ sh85097529,Papabuco language,"sh85149668,sh85084601",Q3362749,1052283
 * https://id.loc.gov/index.html
 * https://id.loc.gov/download/
 * https://id.loc.gov/download/lcsh.both.ndjson.zip
+* https://id.loc.gov/download/lcnaf.both.ndjson.zip (8GB)
