@@ -18,13 +18,13 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/googleapis/gax-go/v2
 github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
-# github.com/mattn/go-sqlite3 v1.14.8
+# github.com/mattn/go-sqlite3 v1.14.9
 ## explicit
 github.com/mattn/go-sqlite3
-# github.com/sfomuseum/go-csvdict v0.0.1
+# github.com/sfomuseum/go-csvdict v1.0.0
 ## explicit
 github.com/sfomuseum/go-csvdict
-# github.com/tidwall/gjson v1.9.4
+# github.com/tidwall/gjson v1.10.2
 ## explicit
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.1.1
