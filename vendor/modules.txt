@@ -1,9 +1,9 @@
-# github.com/aaronland/go-json-query v0.1.1
+# github.com/aaronland/go-json-query v0.1.2
 github.com/aaronland/go-json-query
-# github.com/aaronland/go-jsonl v0.0.9
+# github.com/aaronland/go-jsonl v0.0.14
 ## explicit
 github.com/aaronland/go-jsonl/walk
-# github.com/aaronland/go-roster v0.0.2
+# github.com/aaronland/go-roster v1.0.0
 ## explicit
 github.com/aaronland/go-roster
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
@@ -18,13 +18,13 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/googleapis/gax-go/v2
 github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
-# github.com/mattn/go-sqlite3 v1.14.9
+# github.com/mattn/go-sqlite3 v1.14.14
 ## explicit
 github.com/mattn/go-sqlite3
 # github.com/sfomuseum/go-csvdict v1.0.0
 ## explicit
 github.com/sfomuseum/go-csvdict
-# github.com/tidwall/gjson v1.10.2
+# github.com/tidwall/gjson v1.14.1
 ## explicit
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.1.1

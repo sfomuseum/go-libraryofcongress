@@ -2,12 +2,15 @@
 package walk
 
 import (
+	"context"
 	"fmt"
 	"github.com/aaronland/go-json-query"
 	"io"
 )
 
 const CONTEXT_PATH string = "github.com/aaronland/go-jsonl#path"
+
+type WalkFilterFunc func(context.Context, string) bool
 
 type WalkOptions struct {
 	URI           string
@@ -18,6 +21,7 @@ type WalkOptions struct {
 	FormatJSON    bool
 	QuerySet      *query.QuerySet
 	IsBzip        bool
+	Filter        WalkFilterFunc
 }
 
 type WalkRecord struct {
