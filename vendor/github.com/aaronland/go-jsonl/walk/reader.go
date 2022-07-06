@@ -15,6 +15,7 @@ func WalkReader(ctx context.Context, opts *WalkOptions, fh io.Reader) {
 
 	record_ch := opts.RecordChannel
 	error_ch := opts.ErrorChannel
+	done_ch := opts.DoneChannel
 
 	reader := bufio.NewReader(fh)
 
@@ -55,13 +56,13 @@ func WalkReader(ctx context.Context, opts *WalkOptions, fh io.Reader) {
 			if err == io.ErrUnexpectedEOF {
 				break
 			}
-				
+
 			e := &WalkError{
 				Path:       path,
 				LineNumber: lineno,
 				Err:        err,
 			}
-			
+
 			error_ch <- e
 			continue
 		}
@@ -132,4 +133,5 @@ func WalkReader(ctx context.Context, opts *WalkOptions, fh io.Reader) {
 		record_ch <- rec
 	}
 
+	done_ch <- true
 }

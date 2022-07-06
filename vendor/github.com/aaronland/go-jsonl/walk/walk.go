@@ -17,6 +17,7 @@ type WalkOptions struct {
 	Workers       int
 	RecordChannel chan *WalkRecord
 	ErrorChannel  chan *WalkError
+	DoneChannel   chan bool
 	ValidateJSON  bool
 	FormatJSON    bool
 	QuerySet      *query.QuerySet

@@ -1,10 +1,5 @@
 package libraryofcongress
 
-// This exists solely to deduplicate IDs seen in the various LoC authority files.
-// It is necessary specifically for the LCNAF file which is so big that tracking
-// IDs in memory trigger "out of memory" errors so instead we track "attendance"
-// on disk using a temporary SQLite database.
-
 import (
 	"context"
 	"database/sql"
@@ -15,12 +10,23 @@ import (
 	"sync"
 )
 
+// type Catalog is a struct used deduplicate IDs seen in the various LoC authority files.
+// It is necessary specifically for the LCNAF file which is so big that tracking IDs in memory
+// trigger "out of memory" errors so instead we track "attendance" on disk using a temporary SQLite
+// database.
 type Catalog struct {
+	// path is the path to the temporary SQLite database on disk.
 	path string
+	// db is the `sql.DB` instance mapped to the temporary SQLite database on disk.
 	db   *sql.DB
+	// mu is an internal `sync.RWMutex` instance used to prevent race conditions.
 	mu   *sync.RWMutex
 }
 
+// NewCatalog() returns a new `Catalog` instance configured by 'uri' which is expected to take
+// the form of:
+//
+//	tmp://
 func NewCatalog(ctx context.Context, uri string) (*Catalog, error) {
 
 	tmpfile, err := ioutil.TempFile("", "catalog")
@@ -75,6 +81,7 @@ func NewCatalog(ctx context.Context, uri string) (*Catalog, error) {
 	return c, nil
 }
 
+// ExistsOrStore() adds 'id' to the underlying SQLite database if it does not already exist.
 func (c *Catalog) ExistsOrStore(ctx context.Context, id string) (bool, error) {
 
 	c.mu.Lock()
@@ -99,6 +106,7 @@ func (c *Catalog) ExistsOrStore(ctx context.Context, id string) (bool, error) {
 	return false, nil
 }
 
+// Exists() returns a boolean value indicating whether or not 'id' exists in the temporary SQLite database.
 func (c *Catalog) Exists(ctx context.Context, id string) (bool, error) {
 
 	var count int
@@ -117,17 +125,19 @@ func (c *Catalog) Exists(ctx context.Context, id string) (bool, error) {
 	return true, nil
 }
 
+// Store() creates a new entry for 'id' in the temporary SQLite database.
 func (c *Catalog) Store(ctx context.Context, id string) error {
 
 	_, err := c.db.ExecContext(ctx, "INSERT INTO seen(id) VALUES(?)", id)
 
 	if err != nil {
-		return fmt.Errorf("Failed to inserty for %s, %w", id, err)
+		return fmt.Errorf("Failed to insert for %s, %w", id, err)
 	}
 
 	return nil
 }
 
+// Close() removes the temporary SQLite database from disk.
 func (c *Catalog) Close(ctx context.Context) error {
 	return os.Remove(c.path)
 }
