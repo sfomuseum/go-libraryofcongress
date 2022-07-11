@@ -7,8 +7,8 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
-	"strings"
 )
 
 type Reader struct {
@@ -53,7 +53,14 @@ func OpenURI(ctx context.Context, uri string) (*Reader, int64, error) {
 	var r io.ReadCloser
 	var sz int64
 
-	if strings.HasPrefix("https://", uri) {
+	u, err := url.Parse(uri)
+
+	if err != nil {
+		return nil, 0, fmt.Errorf("Failed to parse URI for '%s', %w", uri, err)
+	}
+
+	switch u.Scheme {
+	case "http", "https":
 
 		rsp, err := http.Get(uri)
 
@@ -64,7 +71,7 @@ func OpenURI(ctx context.Context, uri string) (*Reader, int64, error) {
 		r = rsp.Body
 		sz = rsp.ContentLength
 
-	} else {
+	default:
 
 		fh, err := os.Open(uri)
 
