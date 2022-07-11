@@ -7,7 +7,6 @@ import (
 	jsonl_walk "github.com/aaronland/go-jsonl/walk"
 	"io"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strconv"
 )
@@ -59,6 +58,7 @@ func NewNDJSONWalker(ctx context.Context, uri string) (Walker, error) {
 	w := &NDJSONWalker{
 		workers: max_workers,
 	}
+
 	return w, nil
 }
 
@@ -97,15 +97,15 @@ func (w *NDJSONWalker) WalkURIs(ctx context.Context, cb WalkCallbackFunction, ur
 // WalkFile() processes 'uri' dispatch each record to 'cb'.
 func (w *NDJSONWalker) WalkFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
 
-	fh, err := os.Open(uri)
+	r, _, err := OpenURI(ctx, uri)
 
 	if err != nil {
 		return fmt.Errorf("Failed to open %s, %v", uri, err)
 	}
 
-	defer fh.Close()
+	defer r.Close()
 
-	err = w.WalkReader(ctx, cb, fh)
+	err = w.WalkReader(ctx, cb, r)
 
 	if err != nil {
 		return fmt.Errorf("Failed to walk %s, %v", uri, err)
@@ -117,23 +117,21 @@ func (w *NDJSONWalker) WalkFile(ctx context.Context, cb WalkCallbackFunction, ur
 // WalkZipFile() decompresses 'uri' and processes each file (contained in the zip archive) dispatching each record to 'cb'.
 func (w *NDJSONWalker) WalkZipFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
 
-	fh, err := os.Open(uri)
+	r, sz, err := OpenURI(ctx, uri)
 
 	if err != nil {
 		return fmt.Errorf("Failed to open %s, %v", uri, err)
 	}
 
-	defer fh.Close()
+	defer r.Close()
 
-	info, _ := os.Stat(uri)
-
-	r, err := zip.NewReader(fh, info.Size())
+	zr, err := zip.NewReader(r, sz)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create zip reader for %s, %v", uri, err)
 	}
 
-	for _, f := range r.File {
+	for _, f := range zr.File {
 
 		zip_fh, err := f.Open()
 
@@ -194,12 +192,12 @@ func (w *NDJSONWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, 
 	walk_opts := &jsonl_walk.WalkOptions{
 		RecordChannel: record_ch,
 		ErrorChannel:  error_ch,
-		DoneChannel: done_ch,
+		DoneChannel:   done_ch,
 		Workers:       w.workers,
 	}
 
 	go jsonl_walk.WalkReader(ctx, walk_opts, r)
-	
+
 	<-done_ch
 
 	if walk_err != nil && !jsonl_walk.IsEOFError(walk_err) {

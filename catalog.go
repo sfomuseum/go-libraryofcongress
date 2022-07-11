@@ -18,9 +18,9 @@ type Catalog struct {
 	// path is the path to the temporary SQLite database on disk.
 	path string
 	// db is the `sql.DB` instance mapped to the temporary SQLite database on disk.
-	db   *sql.DB
+	db *sql.DB
 	// mu is an internal `sync.RWMutex` instance used to prevent race conditions.
-	mu   *sync.RWMutex
+	mu *sync.RWMutex
 }
 
 // NewCatalog() returns a new `Catalog` instance configured by 'uri' which is expected to take

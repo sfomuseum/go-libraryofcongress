@@ -3,8 +3,8 @@ package walk
 import (
 	"context"
 	"path/filepath"
-	"testing"
 	"sync/atomic"
+	"testing"
 )
 
 func TestNDJSONWalker(t *testing.T) {
@@ -12,7 +12,7 @@ func TestNDJSONWalker(t *testing.T) {
 	ctx := context.Background()
 
 	paths := map[string]int32{
-		"../fixtures/lcsh.sample.ndjson": int32(3),
+		"../fixtures/lcsh.sample.ndjson":     int32(3),
 		"../fixtures/lcsh.sample.ndjson.zip": int32(2),
 	}
 
