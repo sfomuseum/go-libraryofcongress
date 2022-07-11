@@ -13,7 +13,7 @@ func TestNDJSONWalker(t *testing.T) {
 
 	paths := map[string]int32{
 		"../fixtures/lcsh.sample.ndjson":     int32(3),
-		"../fixtures/lcsh.sample.ndjson.zip": int32(2),
+		"../fixtures/lcsh.sample.ndjson.zip": int32(3),
 	}
 
 	for rel_path, expected_count := range paths {
@@ -44,7 +44,7 @@ func TestNDJSONWalker(t *testing.T) {
 		}
 
 		if count != expected_count {
-			t.Fatalf("Unexpected count for %s: %d", abs_path, count)
+			t.Fatalf("Unexpected count for %s: %d (expected: %d)", abs_path, count, expected_count)
 		}
 	}
 }

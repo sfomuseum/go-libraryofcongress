@@ -170,6 +170,8 @@ func (w *NDJSONWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, 
 			case <-ctx.Done():
 				done_ch <- true
 				return
+			case <-done_ch:
+				return
 			case err := <-error_ch:
 				walk_err = err
 				done_ch <- true
@@ -196,9 +198,7 @@ func (w *NDJSONWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, 
 		Workers:       w.workers,
 	}
 
-	go jsonl_walk.WalkReader(ctx, walk_opts, r)
-
-	<-done_ch
+	jsonl_walk.WalkReader(ctx, walk_opts, r)
 
 	if walk_err != nil && !jsonl_walk.IsEOFError(walk_err) {
 		return fmt.Errorf("Failed to walk document, %v", walk_err)

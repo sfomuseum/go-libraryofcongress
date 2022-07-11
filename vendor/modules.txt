@@ -18,6 +18,9 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/googleapis/gax-go/v2
 github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
+# github.com/jeffallen/seekinghttp v0.0.0-20171214161738-f41d11cb25b7
+## explicit
+github.com/jeffallen/seekinghttp
 # github.com/mattn/go-sqlite3 v1.14.14
 ## explicit
 github.com/mattn/go-sqlite3

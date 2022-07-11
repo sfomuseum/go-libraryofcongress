@@ -53,6 +53,12 @@ n88299999,"Herring, Jackson R."
 ... and so on
 ```
 
+It is also possible to parse LCSH data directly from the LoC servers. For example:
+
+```
+$> bin/parse-lcnaf https://id.loc.gov/download/lcnaf.both.ndjson.zip
+```
+
 #### Notes
 
 * Persons with empty labels are ignored.
@@ -120,10 +126,15 @@ $> grep Q3362749 ./lcsh.csv
 sh85097529,Papabuco language,"sh85149668,sh85084601",Q3362749,1052283
 ```
 
+It is also possible to parse LCSH data directly from the LoC servers. For example:
+
+```
+$> bin/parse-lcsh https://id.loc.gov/download/lcsh.both.ndjson.zip
+```
+
 #### Notes
 
 * Subject headings with empty labels are ignored.
-* It is assumed that you have downloaded the [lcsh.both.ndjson.zip](https://id.loc.gov/download) file from the Library of Congress' servers. Future releases may support fetching this file directly.
 * This tool will work with the compressed and uncompressed version of `lcsh.both.ndjson`.
 
 ## See also

@@ -2,55 +2,17 @@ package walk
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
+	"github.com/jeffallen/seekinghttp"
 	"net/url"
 	"os"
 )
 
-type Reader struct {
-	io.ReadCloser
-	io.ReaderAt
-	R io.ReadCloser
-	N int64
-}
-
-func NewReader(r io.ReadCloser) *Reader {
-	return &Reader{R: r}
-}
-
-func (r *Reader) ReadAt(p []byte, off int64) (n int, err error) {
-	if off < r.N {
-		return 0, errors.New("invalid offset")
-	}
-	diff := off - r.N
-	written, err := io.CopyN(ioutil.Discard, r.R, diff)
-	r.N += written
-	if err != nil {
-		return 0, err
-	}
-
-	n, err = r.R.Read(p)
-	r.N += int64(n)
-	return
-}
-
-func (r *Reader) Read(p []byte) (n int, err error) {
-	return r.R.Read(p)
-}
-
-func (r *Reader) Close() error {
-	return r.R.Close()
-}
-
 // OpenURI opens 'uri' a and returns an `io.Reader` and the size of the file. If 'uri' is
 // prefixed with "https://" then the body of the file will be retrieved via an HTTP GET request.
-func OpenURI(ctx context.Context, uri string) (*Reader, int64, error) {
+func OpenURI(ctx context.Context, uri string) (WalkReader, int64, error) {
 
-	var r io.ReadCloser
+	var r WalkReader
 	var sz int64
 
 	u, err := url.Parse(uri)
@@ -62,14 +24,16 @@ func OpenURI(ctx context.Context, uri string) (*Reader, int64, error) {
 	switch u.Scheme {
 	case "http", "https":
 
-		rsp, err := http.Get(uri)
+		req := seekinghttp.New(uri)
+
+		s, err := req.Size()
 
 		if err != nil {
-			return nil, 0, fmt.Errorf("Failed to retrieve %s, %w", uri, err)
+			return nil, 0, err
 		}
 
-		r = rsp.Body
-		sz = rsp.ContentLength
+		r = &RemoteWalkReader{remote: req}
+		sz = s
 
 	default:
 
@@ -81,9 +45,9 @@ func OpenURI(ctx context.Context, uri string) (*Reader, int64, error) {
 
 		info, _ := os.Stat(uri)
 
-		r = fh
+		r = &LocalWalkReader{local: fh}
 		sz = info.Size()
 	}
 
-	return NewReader(r), sz, nil
+	return r, sz, nil
 }
