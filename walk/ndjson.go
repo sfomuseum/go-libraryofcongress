@@ -4,11 +4,12 @@ import (
 	"archive/zip"
 	"context"
 	"fmt"
-	jsonl_walk "github.com/aaronland/go-jsonl/walk"
 	"io"
 	"net/url"
 	"path/filepath"
 	"strconv"
+
+	jsonl_walk "github.com/aaronland/go-jsonl/walk"
 )
 
 // type NDJSONWalker implements the `Walker` interface for NDJSON files.

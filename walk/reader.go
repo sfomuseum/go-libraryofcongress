@@ -1,8 +1,9 @@
 package walk
 
 import (
-	"github.com/jeffallen/seekinghttp"
 	"os"
+
+	"github.com/jeffallen/seekinghttp"
 )
 
 // WalkReader is an interface which implements the `io.Reader`, `io.ReaderAt` and `io.Closer` interface

@@ -4,8 +4,9 @@ package walk
 import (
 	"context"
 	"fmt"
-	"github.com/aaronland/go-json-query"
 	"io"
+
+	"github.com/aaronland/go-json-query"
 )
 
 const CONTEXT_PATH string = "github.com/aaronland/go-jsonl#path"

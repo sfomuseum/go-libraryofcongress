@@ -4,11 +4,12 @@ package walk
 import (
 	"context"
 	"fmt"
-	"github.com/aaronland/go-roster"
 	"io"
 	"net/url"
 	"sort"
 	"strings"
+
+	"github.com/aaronland/go-roster"
 )
 
 // type WalkCallbackFunction defines a user-specified callback function for processing a LoC data file.

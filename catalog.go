@@ -4,10 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
 	"os"
 	"sync"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // type Catalog is a struct used deduplicate IDs seen in the various LoC authority files.

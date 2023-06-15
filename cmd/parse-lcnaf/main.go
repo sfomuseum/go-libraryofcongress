@@ -6,15 +6,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/sfomuseum/go-csvdict"
-	"github.com/sfomuseum/go-libraryofcongress"
-	"github.com/sfomuseum/go-libraryofcongress/walk"
-	"github.com/tidwall/gjson"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/sfomuseum/go-csvdict"
+	"github.com/sfomuseum/go-libraryofcongress"
+	"github.com/sfomuseum/go-libraryofcongress/walk"
+	"github.com/tidwall/gjson"
 )
 
 func main() {

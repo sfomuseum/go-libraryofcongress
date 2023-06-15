@@ -5,10 +5,11 @@ import (
 	"compress/bzip2"
 	"context"
 	"encoding/json"
-	"github.com/aaronland/go-json-query"
-	"github.com/tidwall/pretty"
 	"io"
 	_ "log"
+
+	"github.com/aaronland/go-json-query"
+	"github.com/tidwall/pretty"
 )
 
 func WalkReader(ctx context.Context, opts *WalkOptions, fh io.Reader) {

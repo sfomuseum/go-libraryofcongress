@@ -3,9 +3,10 @@ package walk
 import (
 	"context"
 	"fmt"
-	"github.com/jeffallen/seekinghttp"
 	"net/url"
 	"os"
+
+	"github.com/jeffallen/seekinghttp"
 )
 
 // OpenURI opens 'uri' a and returns an `io.Reader` and the size of the file. If 'uri' is

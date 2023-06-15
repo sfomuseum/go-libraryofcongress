@@ -2,11 +2,12 @@ package walk
 
 import (
 	"context"
-	"gocloud.dev/blob"
 	"io"
 	_ "log"
 	"strings"
 	"sync"
+
+	"gocloud.dev/blob"
 )
 
 func WalkBucket(ctx context.Context, opts *WalkOptions, bucket *blob.Bucket) error {
@@ -101,12 +102,12 @@ func WalkBucket(ctx context.Context, opts *WalkOptions, bucket *blob.Bucket) err
 
 			path := strings.TrimRight(obj.Key, "/")
 
+			wg.Add(1)
+
 			go func(path string) {
 
 				// log.Println("WAIT", path)
 				<-throttle
-
-				wg.Add(1)
 
 				defer func() {
 					// log.Println("CLOSE", path)
@@ -138,7 +139,16 @@ func WalkBucket(ctx context.Context, opts *WalkOptions, bucket *blob.Bucket) err
 
 				ctx := context.WithValue(ctx, CONTEXT_PATH, path)
 
-				WalkReader(ctx, opts, fh)
+				go WalkReader(ctx, opts, fh)
+
+				for {
+					select {
+					case <-opts.DoneChannel:
+						return
+					default:
+						//
+					}
+				}
 
 			}(path)
 		}
