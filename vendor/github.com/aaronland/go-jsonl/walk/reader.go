@@ -6,7 +6,6 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	_ "log"
 
 	"github.com/aaronland/go-json-query"
 	"github.com/tidwall/pretty"
