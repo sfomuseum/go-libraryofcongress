@@ -8,7 +8,7 @@ import (
 	"os"
 	"sync"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // type Catalog is a struct used deduplicate IDs seen in the various LoC authority files.
@@ -42,7 +42,7 @@ func NewCatalog(ctx context.Context, uri string) (*Catalog, error) {
 
 	dsn := fmt.Sprintf("%s", path)
 
-	db, err := sql.Open("sqlite3", dsn)
+	db, err := sql.Open("sqlite", dsn)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to open database, %w", err)
