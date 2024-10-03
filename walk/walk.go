@@ -21,9 +21,11 @@ type Walker interface {
 	WalkURIs(context.Context, WalkCallbackFunction, ...string) error
 	// WalkFile iterates (walks) a LoC data file on disk.
 	WalkFile(context.Context, WalkCallbackFunction, string) error
-	// WalkZipFile iterates (walks) a LoC zip-compressed data file on disk.
+	// WalkZipFile iterates (walks) a LoC zip-compressed data URI..
 	WalkZipFile(context.Context, WalkCallbackFunction, string) error
-	// WalkZipFile iterates (walks) LoC data from an `io.Reader` instance.
+	// WalkGzipFile iterates (walks) a LoC gzip-compressed data URI..	
+	WalkGzipFile(context.Context, WalkCallbackFunction, string) error	
+	// WalkReader iterates (walks) LoC data from an `io.Reader` instance.
 	WalkReader(context.Context, WalkCallbackFunction, io.Reader) error
 }
 

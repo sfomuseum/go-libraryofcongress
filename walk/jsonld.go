@@ -13,26 +13,26 @@ import (
 	jsonl_walk "github.com/aaronland/go-jsonl/walk"
 )
 
-// type NDJSONWalker implements the `Walker` interface for NDJSON files.
-type NDJSONWalker struct {
+// type JSONLDWalker implements the `Walker` interface for JSONLD files.
+type JSONLDWalker struct {
 	Walker
-	// workers is the maximum number of simultaneous workers for processing NDJSON files
+	// workers is the maximum number of simultaneous workers for processing JSONLD files
 	workers int
 }
 
 func init() {
 	ctx := context.Background()
-	RegisterWalker(ctx, "ndjson", NewNDJSONWalker)
+	RegisterWalker(ctx, "jsonld", NewJSONLDWalker)
 }
 
-// NewNDJSONWalker creates a new instance that implements the `Walker` interface for NDJSON files configured
+// NewJSONLDWalker creates a new instance that implements the `Walker` interface for JSONLD files configured
 // by 'uri' which is expected to take the form of:
 //
-//	ndjson://?{PARAMETERS}
+//	jsonld://?{PARAMETERS}
 //
 // Where {PARAMETERS} may be:
-// * `?workers=` The number of maximum simultaneous workers for processing NDJSON records. Default is 100.
-func NewNDJSONWalker(ctx context.Context, uri string) (Walker, error) {
+// * `?workers=` The number of maximum simultaneous workers for processing JSONLD records. Default is 100.
+func NewJSONLDWalker(ctx context.Context, uri string) (Walker, error) {
 
 	max_workers := 100
 
@@ -57,7 +57,7 @@ func NewNDJSONWalker(ctx context.Context, uri string) (Walker, error) {
 		max_workers = w
 	}
 
-	w := &NDJSONWalker{
+	w := &JSONLDWalker{
 		workers: max_workers,
 	}
 
@@ -66,7 +66,7 @@ func NewNDJSONWalker(ctx context.Context, uri string) (Walker, error) {
 
 // WalkURIs() processes 'uris' dispatching each record to 'cb'. 'uris' is expected to be a list of compressed ('.zip')
 // or uncompressed files on disk.
-func (w *NDJSONWalker) WalkURIs(ctx context.Context, cb WalkCallbackFunction, uris ...string) error {
+func (w *JSONLDWalker) WalkURIs(ctx context.Context, cb WalkCallbackFunction, uris ...string) error {
 
 	for _, uri := range uris {
 
@@ -99,7 +99,7 @@ func (w *NDJSONWalker) WalkURIs(ctx context.Context, cb WalkCallbackFunction, ur
 }
 
 // WalkFile() processes 'uri' dispatch each record to 'cb'.
-func (w *NDJSONWalker) WalkFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
+func (w *JSONLDWalker) WalkFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
 
 	r, _, err := OpenURI(ctx, uri)
 
@@ -118,7 +118,7 @@ func (w *NDJSONWalker) WalkFile(ctx context.Context, cb WalkCallbackFunction, ur
 	return nil
 }
 
-func (w *NDJSONWalker) WalkGzipFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
+func (w *JSONLDWalker) WalkGzipFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
 
 	r, _, err := OpenURI(ctx, uri)
 
@@ -138,7 +138,7 @@ func (w *NDJSONWalker) WalkGzipFile(ctx context.Context, cb WalkCallbackFunction
 }
 
 // WalkZipFile() decompresses 'uri' and processes each file (contained in the zip archive) dispatching each record to 'cb'.
-func (w *NDJSONWalker) WalkZipFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
+func (w *JSONLDWalker) WalkZipFile(ctx context.Context, cb WalkCallbackFunction, uri string) error {
 
 	r, sz, err := OpenURI(ctx, uri)
 
@@ -175,7 +175,7 @@ func (w *NDJSONWalker) WalkZipFile(ctx context.Context, cb WalkCallbackFunction,
 }
 
 // WalkReader() processes each record in 'r' (which is expected to a line-separate JSON document) and dispatches each record to 'cb'.
-func (w *NDJSONWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, r io.Reader) error {
+func (w *JSONLDWalker) WalkReader(ctx context.Context, cb WalkCallbackFunction, r io.Reader) error {
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()

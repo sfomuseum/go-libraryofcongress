@@ -21,15 +21,24 @@ import (
 
 func main() {
 
-	broader := flag.Bool("include-broader", false, "If present, include a comma-separated list of `skos:broader` pointers associated with each subject heading")
+	var walker_uri string
+	var broader bool
+	var wikidata bool
+	var worldcat bool
+	var concordances bool
+	var all bool
+	
+	flag.StringVar(&walker_uri, "walker-uri", "jsonld://", "...")
+	
+	flag.BoolVar(&broader, "include-broader", false, "If present, include a comma-separated list of `skos:broader` pointers associated with each subject heading")
 
-	wikidata := flag.Bool("include-wikidata", false, "If present, include a Wikidata pointer associated with each subject heading")
+	flag.BoolVar(&wikidata, "include-wikidata", false, "If present, include a Wikidata pointer associated with each subject heading")
 
-	worldcat := flag.Bool("include-worldcat", false, "If present, include a Worldcat pointer associated with each subject heading")
+	flag.BoolVar(&worldcat, "include-worldcat", false, "If present, include a Worldcat pointer associated with each subject heading")
 
-	concordances := flag.Bool("include-concordances", false, "If true will enable the -include-wikidata and -include-worldcat flags")
+	flag.BoolVar(&concordances, "include-concordances", false, "If true will enable the -include-wikidata and -include-worldcat flags")
 
-	all := flag.Bool("include-all", false, "If true will enable all the other -include-* flags")
+	flag.BoolVar(&all, "include-all", false, "If true will enable all the other -include-* flags")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "parse-lcsh is a command-line tool to parse the Library of Congress `lcsh.both.ndjson` file and out CSV-encoded subject heading ID and (English) label data. It can also be configured to include broader concepts for each heading as well as Wikidata and Worldcat concordances.\n\n")
@@ -40,21 +49,21 @@ func main() {
 
 	flag.Parse()
 
-	if *concordances {
-		*wikidata = true
-		*worldcat = true
+	if concordances {
+		wikidata = true
+		worldcat = true
 	}
 
-	if *all {
-		*broader = true
-		*wikidata = true
-		*worldcat = true
+	if all {
+		broader = true
+		wikidata = true
+		worldcat = true
 	}
 
 	uris := flag.Args()
 	ctx := context.Background()
 
-	w, err := walk.NewWalker(ctx, "ndjson://")
+	w, err := walk.NewWalker(ctx, walker_uri)
 
 	if err != nil {
 		log.Fatalf("Failed to create walker, %v", err)
@@ -71,15 +80,15 @@ func main() {
 		"label",
 	}
 
-	if *broader {
+	if broader {
 		fieldnames = append(fieldnames, "broader")
 	}
 
-	if *wikidata {
+	if wikidata {
 		fieldnames = append(fieldnames, "wikidata_id")
 	}
 
-	if *worldcat {
+	if worldcat {
 		fieldnames = append(fieldnames, "worldcat_id")
 	}
 

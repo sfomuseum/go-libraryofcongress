@@ -20,6 +20,10 @@ import (
 
 func main() {
 
+	var walker_uri
+
+	flag.StringVar(&walker_uri, "walker-uri", "jsonld://", "...")
+	
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "parse-lcnaf is a command-line tool to parse the Library of Congress `lcnaf.both.ndjson` (or `lcnaf.both.ndjson.zip`) file and output CSV-encoded subject heading ID and (English) label data.\n\n")
 		fmt.Fprintf(os.Stderr, "Usage:\n\t %s lcnaf.both.ndjson.zip\n\n", os.Args[0])
@@ -31,7 +35,7 @@ func main() {
 	uris := flag.Args()
 	ctx := context.Background()
 
-	w, err := walk.NewWalker(ctx, "ndjson://")
+	w, err := walk.NewWalker(ctx, walker_uri)
 
 	if err != nil {
 		log.Fatalf("Failed to create walker, %v", err)
